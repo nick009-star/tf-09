@@ -202,3 +202,37 @@ def tentar(rotulo, acao):
         print(rotulo, "-> passou (!)")
     except Exception as erro:
         print(rotulo, "->", type(erro).__name__ + ":", erro)
+
+
+disco = Pasta("C:")
+usuarios = Pasta("Users", disco)
+usuario = Pasta("klebe", usuarios)
+desktop = Pasta("Desktop", usuario)
+projetos = Pasta("Projetos", desktop)
+relatorio = Arquivo("relatorio.txt", 120, desktop)
+imagem = Arquivo("imagem.png", 2048, projetos)
+atalho_arquivo = Atalho("atalho-relatorio", relatorio, desktop)
+atalho_pasta = Atalho("atalho-projetos", projetos, desktop)
+pasta_com_atalho = Pasta("PastaComAtalho", desktop)
+arquivo_da_pasta = Arquivo("rascunho.txt", 50, desktop)
+atalho_dentro_da_pasta = Atalho("atalho-interno", relatorio, pasta_com_atalho)
+
+print("Árvore completa:")
+disco.mostrar()
+
+lixeira = Lixeira()
+lixeira.descartar(Arquivo("descartado.txt", 30))
+print("Espaço total:", espaco_total([arquivo_da_pasta, pasta_com_atalho, lixeira]), "B")
+
+tentar(
+    "Alterar destino pela propriedade",
+    lambda: setattr(atalho_arquivo, "destino", imagem),
+)
+tentar(
+    "Redirecionar atalho para si mesmo",
+    lambda: atalho_arquivo.redirecionar(atalho_arquivo),
+)
+tentar(
+    "Redirecionar atalho para a pasta que o contém",
+    lambda: atalho_arquivo.redirecionar(desktop),
+)
